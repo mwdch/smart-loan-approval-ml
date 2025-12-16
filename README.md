@@ -48,6 +48,8 @@ smart-loan-approval/
 
 ## Dataset
 
+You can download the dataset from: [Loan Approval Dataset](https://www.kaggle.com/datasets/architsharma01/loan-approval-prediction-dataset?utm_source=chatgpt.com)
+
 | Column                   | Description                                   |
 | ------------------------ | --------------------------------------------- |
 | loan_id                  | Unique loan application ID                    |
