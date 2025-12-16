@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Loan Approval</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; }
+    h2 { text-align: center; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px; width: 100%; background-color: #007BFF; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+    #result { margin-top: 20px; font-size: 1.2em; font-weight: bold; text-align: center; }
+    .approved { color: green; }
+    .rejected { color: red; }
+  </style>
+</head>
+<body>
+  <h2>Loan Approval Checker</h2>
+
+  <label for="income">Income (Annual, e.g., 500000)</label>
+  <input id="income" type="number" placeholder="Income in ₹">
+
+  <label for="loan">Loan Amount (e.g., 250000)</label>
+  <input id="loan" type="number" placeholder="Loan Amount in ₹">
+
+  <label for="cibil">CIBIL Score (e.g., 700)</label>
+  <input id="cibil" type="number" placeholder="CIBIL Score 300-900">
+
+  <label for="education">Education</label>
+  <select id="education">
+    <option value="Graduate">Graduate</option>
+    <option value="Not Graduate">Not Graduate</option>
+  </select>
+
+  <label for="self">Self Employed</label>
+  <select id="self">
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+
+  <button onclick="submitLoan()">Check Approval</button>
+
+  <div id="result"></div>
+
+<script>
+async function submitLoan() {
+  const income = Number(document.getElementById('income').value);
+  const loan = Number(document.getElementById('loan').value);
+  const cibil = Number(document.getElementById('cibil').value);
+  const education = document.getElementById('education').value;
+  const self = document.getElementById('self').value;
+
+  const res = await fetch("http://127.0.0.1:8000/predict", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      income_annum: income,
+      loan_amount: loan,
+      cibil_score: cibil,
+      education: education,
+      self_employed: self
+    })
+  });
+
+  const data = await res.json();
+  const resultDiv = document.getElementById('result');
+  if (data.approved) {
+    resultDiv.innerText = `Approved ✅ (Probability: ${data.approval_probability})`;
+    resultDiv.className = 'approved';
+  } else {
+    resultDiv.innerText = `Rejected ❌ (Probability: ${data.approval_probability})`;
+    resultDiv.className = 'rejected';
+  }
+}
+</script>
+</body>
+</html>
